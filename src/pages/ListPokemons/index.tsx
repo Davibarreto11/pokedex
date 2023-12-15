@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, Image } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 import Icon from 'react-native-vector-icons/Feather'
 import apiPokemon from '../../services/Api'
@@ -8,31 +9,28 @@ import pokeBall from '../../assets/pokeball.png'
 
 import { Container, Header, HeaderTitle, PokemonSearch, PokemonSearchTextInput, PokemonContainer, PokemonDetail, PokemonName, PokemonType, PokemonNumber, PokemonImage } from './styles'
 
-interface pokedex {
-  name: string
-  front_default: string
-}
-
 interface pokemon {
-  id: number
-  name: string
-  image: string
-  types: any[]
-  order: number
-  front_default: string
+  data: {
+    id: number
+    name: string
+    types: any[]
+    order: number
+    sprites: {
+      other: {
+        home: {
+          front_default: string
+        }
+      }
+    }
+  }
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 const ListPokemons: React.FC = () => {
-  const [pokemons, setPokemons] = useState<pokemon[]>([])
-  const [pokemon, setPokemon] = useState()
+  const { navigate } = useNavigation()
 
-  // useEffect(() => {
-  //   apiPokemon.get('pokemon').then((response) => {
-  //     setPokemons(response.data.results)
-  //   })
-  // }, [])
+  const [pokemons, setPokemons] = useState()
 
   useEffect(() => {
     const getPokemons = async () => {
@@ -44,6 +42,10 @@ const ListPokemons: React.FC = () => {
     }
 
     getPokemons()
+  }, [])
+
+  const navigateToPokemonDetail = useCallback((pokemonId: number) => {
+    navigate('PokemonDetail', { pokemonId })
   }, [])
 
   return (
@@ -74,9 +76,9 @@ const ListPokemons: React.FC = () => {
       <FlatList<pokemon>
         style={{ paddingTop: 32, paddingBottom: 24, paddingLeft: 16, paddingRight: 16 }}
         data={pokemons}
-        keyExtractor={(pokemon) => pokemon.data.id}
+        // keyExtractor={(pokemon) => pokemon.data.id}
         renderItem={({ item: pokemon }) => (
-          <PokemonContainer style={{ borderRadius: 25 }}>
+          <PokemonContainer onPress={() => { navigateToPokemonDetail(pokemon.data.id) }} style={{ borderRadius: 25 }}>
 
             <PokemonDetail>
               <PokemonName>{pokemon.data.name}</PokemonName>

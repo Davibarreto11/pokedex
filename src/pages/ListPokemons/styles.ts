@@ -30,7 +30,7 @@ export const PokemonSearchTextInput = styled.TextInput`
   padding-left: 50px;
   background: #111216;
   border-radius: 15px;
-  color: #FFF;
+  color:#F4ede8;
   font-size: 20px;
 `
 
