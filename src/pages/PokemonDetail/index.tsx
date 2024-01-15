@@ -38,6 +38,8 @@ interface PokemonType {
   abilities: any[]
   weight: number
   height: number
+  base_experience: number
+  moves: any[]
 }
 
 const PokemonDetail: React.FC = () => {
@@ -48,9 +50,9 @@ const PokemonDetail: React.FC = () => {
 
   const routesParams = route.params as RouteParams
 
-  // const navigateBack = useCallback(() => {
-  //   goBack()
-  // }, [goBack])
+  const navigateBack = useCallback(() => {
+    goBack()
+  }, [goBack])
 
   useEffect(() => {
     apiPokemon.get(`pokemon/${routesParams.pokemonId}`).then(response => { setPokemon(response.data) })
@@ -59,7 +61,7 @@ const PokemonDetail: React.FC = () => {
   return (
     <Container>
       <Header>
-        <IconContainer onPress={() => { goBack() }} style={{ borderRadius: 25 }}>
+        <IconContainer onPress={navigateBack} style={{ borderRadius: 25 }}>
           <Icon name='chevron-left' size={25} color='#7b7b7c'/>
         </IconContainer>
         <IconContainer style={{ borderRadius: 25 }}>
@@ -80,7 +82,7 @@ const PokemonDetail: React.FC = () => {
             <TypeAttributeText>Ability</TypeAttributeText>
           </Row>
           <Row>
-            <ValueAttributeText>{pokemon?.abilities[1].ability.name}</ValueAttributeText>
+            <ValueAttributeText>{pokemon?.abilities[1]?.ability.name ? pokemon?.abilities[1]?.ability.name : 'Não possue' }</ValueAttributeText>
             <TypeAttributeText>Ability</TypeAttributeText>
           </Row>
           <Row>
@@ -88,14 +90,16 @@ const PokemonDetail: React.FC = () => {
             <TypeAttributeText>Weight</TypeAttributeText>
           </Row>
           <Row>
-            <ValueAttributeText>{pokemon?.height} metros</ValueAttributeText>
-            <TypeAttributeText>Weight</TypeAttributeText>
+            <ValueAttributeText>{pokemon?.height} cm</ValueAttributeText>
+            <TypeAttributeText>tall</TypeAttributeText>
           </Row>
         </PokemonAttributes>
 
         <DescriptionPokemon>
           <DescriptionTitle style={{ borderTopWidth: 1, borderColor: '#f4ede8', opacity: 0.5, paddingTop: 8 }}>Description</DescriptionTitle>
-          <DescriptionText>Pokemon do tipo também</DescriptionText>
+          <DescriptionText>
+            Pokemon do tipo {pokemon?.types[0].type.name} com base de experiencia de {pokemon?.base_experience} com movimentos como {pokemon?.moves[0].move.name}, {pokemon?.moves[1].move.name}, {pokemon?.moves[3].move.name}, {pokemon?.moves[4].move.name}, {pokemon?.moves[5].move.name}!
+          </DescriptionText>
         </DescriptionPokemon>
       </PokemonContainer>
     </Container>

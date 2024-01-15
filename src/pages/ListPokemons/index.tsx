@@ -25,24 +25,35 @@ interface pokemon {
   }
 }
 
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
 const ListPokemons: React.FC = () => {
   const { navigate } = useNavigation()
 
-  const [pokemons, setPokemons] = useState()
+  const [searchText, setSearchText] = useState('')
+  const [pokemons, setPokemons] = useState<pokemon[]>([])
+  const [listPokemons, setListPokemons] = useState<pokemon[]>([])
 
   useEffect(() => {
-    const getPokemons = async () => {
-      const endPoints = []
-      for (const number of numbers) {
-        endPoints.push(`https://pokeapi.co/api/v2/pokemon/${number}`)
+    if (searchText === '') {
+      const getPokemons = async () => {
+        const endPoints = []
+        for (let i = 1; i <= 1300; i++) {
+          endPoints.push(`https://pokeapi.co/api/v2/pokemon/${i}`)
+        }
+        await Promise.all(endPoints.map(async (endpoint) => await apiPokemon.get(endpoint))).then(response => { setPokemons(response) })
+        setListPokemons(pokemons)
       }
-      await Promise.all(endPoints.map(async (endpoint) => await apiPokemon.get(endpoint))).then(response => { setPokemons(response) })
-    }
 
-    getPokemons()
-  }, [])
+      getPokemons()
+    } else {
+      setListPokemons(pokemons.filter(item => {
+        if (item.data.name.includes(searchText)) {
+          return true
+        } else {
+          return false
+        }
+      }))
+    }
+  }, [searchText, pokemons])
 
   const navigateToPokemonDetail = useCallback((pokemonId: number) => {
     navigate('PokemonDetail', { pokemonId })
@@ -67,15 +78,18 @@ const ListPokemons: React.FC = () => {
           borderRightWidth: 2,
           borderRightColor: '#3f94f2',
           borderBottomWidth: 2,
-          borderBottomColor: '#3f94f2'
+          borderBottomColor: '#3f94f2',
+          textTransform: 'lowercase'
         }}
-        placeholderTextColor='#7b7b7c' placeholder='Search Pokemon' />
+        placeholderTextColor='#7b7b7c' placeholder='Search Pokemon'
+        value={searchText}
+        onChangeText={(t) => { setSearchText(t) }} />
         <Icon style={{ position: 'absolute', top: 25, left: 35 }} name='search' size={20} color='#7b7b7c' />
       </PokemonSearch>
 
       <FlatList<pokemon>
         style={{ paddingTop: 32, paddingBottom: 24, paddingLeft: 16, paddingRight: 16 }}
-        data={pokemons}
+        data={listPokemons}
         // keyExtractor={(pokemon) => pokemon.data.id}
         renderItem={({ item: pokemon }) => (
           <PokemonContainer onPress={() => { navigateToPokemonDetail(pokemon.data.id) }} style={{ borderRadius: 25 }}>

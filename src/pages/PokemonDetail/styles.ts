@@ -1,7 +1,9 @@
 import { RectButton } from 'react-native-gesture-handler'
 import styled from 'styled-components/native'
 
-export const Container = styled.View``
+export const Container = styled.View`
+  justify-content: center;
+`
 
 export const Header = styled.View`
   padding: 25px;
@@ -26,7 +28,7 @@ export const Pokemon = styled.View`
 export const PokemonImage = styled.Image`
   width: 350px;
   height: 350px;
-  margin-top: -75px;
+  margin-top: -20px;
   margin-bottom: 30px;
 `
 
