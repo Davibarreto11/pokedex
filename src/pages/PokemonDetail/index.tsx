@@ -70,7 +70,7 @@ const PokemonDetail: React.FC = () => {
       </Header>
 
       <Pokemon>
-        <PokemonImage source={{ uri: pokemon?.sprites.other?.home.front_default }} />
+        <PokemonImage source={{ uri: pokemon?.sprites.other?.home?.front_default }} />
         <PokemonNameText>{pokemon?.name}</PokemonNameText>
         <PokemonTypeText>{pokemon?.types[0].type.name}</PokemonTypeText>
       </Pokemon>

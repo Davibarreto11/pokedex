@@ -36,11 +36,11 @@ const ListPokemons: React.FC = () => {
     if (searchText === '') {
       const getPokemons = async () => {
         const endPoints = []
-        for (let i = 1; i <= 1300; i++) {
+        for (let i = 1; i <= 200; i++) {
           endPoints.push(`https://pokeapi.co/api/v2/pokemon/${i}`)
         }
-        await Promise.all(endPoints.map(async (endpoint) => await apiPokemon.get(endpoint))).then(response => { setPokemons(response) })
         setListPokemons(pokemons)
+        await Promise.all(endPoints.map(async (endpoint) => await apiPokemon.get(endpoint))).then(response => { setPokemons(response) })
       }
 
       getPokemons()
@@ -78,10 +78,12 @@ const ListPokemons: React.FC = () => {
           borderRightWidth: 2,
           borderRightColor: '#3f94f2',
           borderBottomWidth: 2,
-          borderBottomColor: '#3f94f2',
-          textTransform: 'lowercase'
+          borderBottomColor: '#3f94f2'
         }}
-        placeholderTextColor='#7b7b7c' placeholder='Search Pokemon'
+        keyboardType='email-address'
+        autoCapitalize='none'
+        placeholderTextColor='#7b7b7c'
+        placeholder='Search Pokemon'
         value={searchText}
         onChangeText={(t) => { setSearchText(t) }} />
         <Icon style={{ position: 'absolute', top: 25, left: 35 }} name='search' size={20} color='#7b7b7c' />
